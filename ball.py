@@ -1,0 +1,25 @@
+from pico2d import get_canvas_width, load_image
+
+import game_world
+
+
+class Ball:
+    images = {}
+
+    def __init__(self, x, y, velocity, ball_type=1):
+        image_files = {1: 'ball21x21.png', 2: 'ball41x41.png'}
+        if ball_type not in image_files:
+            raise ValueError('ball_type must be 1 (small) or 2 (large)')
+        if ball_type not in Ball.images:
+            Ball.images[ball_type] = load_image(image_files[ball_type])
+        self.image = Ball.images[ball_type]
+        self.x, self.y = x, y
+        self.velocity = velocity
+
+    def update(self):
+        self.x += self.velocity
+        if self.x < 0 or self.x > get_canvas_width():
+            game_world.remove_object(self)
+
+    def draw(self):
+        self.image.draw(self.x, self.y)
