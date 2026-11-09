@@ -24,25 +24,31 @@ def finish():
 
 def handle_events():
     for event in get_events():
-        if event.type == SDL_QUIT:
-            game_framework.quit()
+        if handle_event(event):
             return
-        if event.type == SDL_KEYDOWN and event.key == SDLK_p:
-            import pause_mode
 
-            game_framework.push_mode(pause_mode)
-            return
-        if event.type == SDL_KEYDOWN and event.key == SDLK_i:
-            import item_mode
 
-            game_framework.push_mode(item_mode)
-            return
-        if event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
-            import title_mode
+def handle_event(event):
+    if event.type == SDL_QUIT:
+        game_framework.quit()
+        return True
+    if event.type == SDL_KEYDOWN and event.key == SDLK_p:
+        import pause_mode
 
-            game_framework.change_mode(title_mode)
-            return
-        boy.handle_event(event)
+        game_framework.push_mode(pause_mode)
+        return True
+    if event.type == SDL_KEYDOWN and event.key == SDLK_i:
+        import item_mode
+
+        game_framework.push_mode(item_mode)
+        return True
+    if event.type == SDL_KEYDOWN and event.key == SDLK_ESCAPE:
+        import title_mode
+
+        game_framework.change_mode(title_mode)
+        return True
+    boy.handle_event(event)
+    return False
 
 
 def pause():
@@ -57,7 +63,11 @@ def update():
     game_world.update()
 
 
-def render():
+def render_scene():
     clear_canvas()
     game_world.render()
+
+
+def render():
+    render_scene()
     update_canvas()
